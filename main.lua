@@ -1,17 +1,23 @@
-package.path = package.path .. ";src/?.lua;src/?/init.lua;src/?/*.lua"
-
-local City = require("game.city")
-local Renderer = require("love.renderer")
-
-local city
+local params = require("config.params")
 
 function love.load()
-    city = City:new(12345, 40, 20) -- seed, width, height
+    print(params["seed"])
+end
+
+function love.update(dt)
+
 end
 
 function love.draw()
-    Renderer.drawCity(city, 20) -- block size
+    love.graphics.rectangle("fill", 100, 100, 200, 150)
+
+end
+
+function love.keypressed(key)
+    if key == "space" then
+        print("Jump!")
+    end
 end
 
 -- cd C:/Users/scott/City-Generator
--- "C:\Program Files\LOVE\love.exe" .
+-- & "C:\Program Files\LOVE\love.exe" .
