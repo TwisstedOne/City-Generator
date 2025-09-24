@@ -1,4 +1,4 @@
-local CityParameters= {
+local CityParameters = {
     seed = 12345,
     size_miles = {width = 8, height = 8},
     samples_per_mile = 40,
