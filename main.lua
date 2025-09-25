@@ -24,11 +24,12 @@ local map = {}
 for y = 1, gridsize/cellsize do
     map[y] = {}
     for x = 1, gridsize/cellsize do
-        local height = (noise:fbm(x/resolution, y/resolution, 4, 0.5, 2) + 1) / 2
+        local height = (noise:fbm(x/resolution, y/resolution, 5, 0.5, 2) + 1) / 2
 
         map[y][x] = height
     end
 end
+
 
 function love.load()
 
@@ -42,46 +43,45 @@ function love.update(dt)
 end
 
 function love.draw()
+    --love.graphics.setColor(255, 255, 0)
+    --love.graphics.rectangle("fill", 90, 90, 520, 520)
     
-    --[[ 
-    love.graphics.setColor(255, 255, 0)
-    love.graphics.rectangle("fill", 90, 90, 520, 520)
-
-    
-    for y = 0, gridsize/cellsize - 1 do
-        for x = 0, gridsize/cellsize - 1 do
+    for y = 1, gridsize/cellsize do
+        for x = 1, gridsize/cellsize do
             local height = map[y][x]
 
             love.graphics.setColor(height, height, height)
-            love.graphics.rectangle("fill", 100 + x * cellsize, 100 + y * cellsize, cellsize, cellsize)
+            love.graphics.rectangle("fill", x * cellsize, 100 + y * cellsize, cellsize, cellsize)
         end
     end
-    ]]--
 
-    local scale = 4
-    local S = 10
-    local nx = #map
-    local ny = #map[1]
+    for y = 1, gridsize/cellsize do
+        for x = 1, gridsize/cellsize do
+            local height = UTILS.sample_height_at_point(map, x, y, 1)
 
-    for px = 0, nx * scale - 1 do
-        for py = 0, ny * scale - 1 do
-            local x = px / scale
-            local y = py / scale
-
-            local h = UTILS.sample_height_at_point(map, x, y, S)
-            love.graphics.setColor(h, h, h)
-            love.graphics.points(px, py)
+            love.graphics.setColor(height, height, height)
+            love.graphics.rectangle("fill", 600 + x * cellsize, 100 + y * cellsize, cellsize, cellsize)
         end
     end
+    
 
 
     local mx, my = love.mouse.getPosition()
-    local x = mx / scale   -- convert pixels → miles (tweak scale)
-    local y = my / scale
+    local x = math.floor(mx/cellsize)
+    local y = math.floor((my - 100)/cellsize)
 
-    local h = UTILS.sample_height_at_point(map, x, y, 10)
+    local h1 = 0
+    if x > 0 and x < gridsize/cellsize and y > 0 and y < gridsize/cellsize then
+        h1 = map[y][x]
+    end
 
-    print("Height at ("..string.format("%.2f",x)..","..string.format("%.2f",y)..") = "..string.format("%.3f",h), 10, 10)
+    local h2 = UTILS.sample_height_at_point(map, mx, my, 1)
+    print(map[1][1].." "..UTILS.sample_height_at_point(map, 1, 1, 1))
+     
+    --local h2 = map[x - 500][y]
+
+    --print("Height at ("..string.format("%.2f",x)..","..string.format("%.2f",y)..") = "..string.format("%.3f",h1))
+    --print("Noise at ("..string.format("%.2f",x)..","..string.format("%.2f",y)..") = "..string.format("%.3f",h2))
 end
 
 function love.keypressed(key)

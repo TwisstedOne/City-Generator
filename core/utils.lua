@@ -49,11 +49,11 @@ function bilinear_interpolate(h00, h10, h01, h11, sx, sy)
 end
 
 function utils.sample_height_at_point(heightmap, x, y, S)
-    local nx = #heightmap
-    local ny = #heightmap[1]
+    local ny = #heightmap
+    local nx = #heightmap[1]
 
-    local i_f = x * S - 0.5
-    local j_f = y * S - 0.5
+    local j_f = x * S - 1
+    local i_f = y * S - 1
 
     local i0 = math.floor(i_f)
     local j0 = math.floor(j_f)
@@ -65,7 +65,7 @@ function utils.sample_height_at_point(heightmap, x, y, S)
     local function get(i, j)
         i = utils.clamp(i, 0, nx-1)
         j = utils.clamp(j, 0, ny-1)
-        return heightmap[i+1][j+1]  -- Lua arrays are 1-based!
+        return heightmap[i+1][j+1]
     end
 
     local h00 = get(i0, j0)
