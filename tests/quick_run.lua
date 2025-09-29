@@ -3,8 +3,14 @@ local params = require("config.params")
 local PRNG = require("core.prng")  
 local NOISE = require("core.noise")  
 local UTILS = require("core.utils")
+local HEIGHTMAP = require("terrain.heightmap")
+local RIVER = require("terrain.river")
 
+-- Params
 local seed = params.seed
+
+
+-- Objects
 local rng = PRNG.init(seed)
 local noise = NOISE.init(seed)
 
@@ -15,6 +21,7 @@ local noise = NOISE.init(seed)
 local qr = {}
 
 qr.load = {}
+qr.draw = {}
 
 function qr.load.Test1()
     qr.cellsize = 4
@@ -32,8 +39,6 @@ function qr.load.Test1()
         end
     end
 end
-
-qr.draw = {}
 
 function qr.draw.Test1()
     local lowest = 1
@@ -84,6 +89,31 @@ function qr.draw.Test1()
 
     --print("Height at ("..string.format("%.2f",x)..","..string.format("%.2f",y)..") = "..string.format("%.3f",h1))
     --print("Noise at ("..string.format("%.2f",x)..","..string.format("%.2f",y)..") = "..string.format("%.3f",h2))
+end
+
+function qr.load.Test2()
+    qr.map = HEIGHTMAP.generate(params, rng, noise)
+    qr.rivers_result = RIVER.extract_rivers(qr.map, params, rng)
+    print(qr.map.nx, qr.map.ny)
+end
+
+function qr.draw.Test2()
+    for y = 1, qr.map.ny do
+        for x = 1, qr.map.nx do
+            local h = qr.map.height[y][x]
+            love.graphics.setColor(h, h, h)
+            love.graphics.rectangle("fill", (x-1)*2, (y-1)*2, 2, 2)
+        end
+    end
+
+    love.graphics.setColor(0, 0, 1)
+    for _, river in ipairs(qr.rivers_result.rivers) do
+        for i = 2, #river.polyline do
+            local p0 = river.polyline[i-1]
+            local p1 = river.polyline[i]
+            love.graphics.line(p0.x*2, p0.y*2, p1.x*2, p1.y*2)
+        end
+    end
 end
 
 return qr

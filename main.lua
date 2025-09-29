@@ -13,7 +13,7 @@ local noise = NOISE.init(seed)
 -- [[ Debug Values ]] -- 
 
 local time = 0
-local test = "Test1"
+local test = "Test2"
 
 -- [[ ------------ ]] -- 
 

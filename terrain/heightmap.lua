@@ -22,6 +22,11 @@ local function normalize(heightmap)
     end
 end
 
+-- Scale [-1,1] to [0,1]
+local function transform_raw_elevation(raw)
+    return (raw + 1)/2
+end
+
 -- Safely get height with boundary clamp
 local function get_height(height, i, j)
     local ny = #height
@@ -76,7 +81,7 @@ function terrain.generate(params, prng, noise)
             )
 
             -- Apply terrain shaping (user-defined)
-            height[j][i] = params.transform_raw_elevation(raw, params)
+            height[j][i] = transform_raw_elevation(raw)
         end
     end
 

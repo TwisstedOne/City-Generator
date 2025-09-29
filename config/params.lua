@@ -6,7 +6,7 @@ local CityParameters = {
         octaves = 5,
         persistence = 0.5,
         lacunarity = 2,
-        scale = 1
+        scale = .5
     },
     --river_threshold = 0,
     coastline = false,
